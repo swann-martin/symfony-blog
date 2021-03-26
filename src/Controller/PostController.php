@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\CreatePostType;
 use App\Repository\PostRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,14 +29,19 @@ class PostController extends AbstractController
     /**
      * @Route("/post/create", name="app_post_create", methods="GET|POST")
      */
-    public function create(Request $request)
+    public function create(Request $request, EntityManagerInterface $em, Security $security)
     {
         $post = new Post();
         $form = $this->createForm(CreatePostType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dump($post);
+            $user = $security->getUser();
+            $post->setAuthor($user);
+
+            $em->persist($post);
+            $em->flush();
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('post/create.html.twig', ['form' => $form->createView()]);
