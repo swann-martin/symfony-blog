@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Symfony 2021 blog !
+{% endblock %}
+
+
+{% block body %}
+	<section class="container my-3">
+
+		<h1>Welcome on our new blog !</h1>
+		<p>
+			<small>It's made with Symfony 5</small>
+		</p>
+
+
+		{% for post in posts %}
+
+			<div class="card my-2 p-2">
+				<h2 class="title">{{post.title}}</h2>
+				<p class="card-content">{{post.content}}</p>
+			</div>
+
+		{% endfor %}
+
+	</section>
+
+{% endblock %}
