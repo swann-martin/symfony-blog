@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Post;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CreatePostType extends AbstractType
@@ -13,7 +14,16 @@ class CreatePostType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('content');
+            ->add('content')
+            ->add('imageFile', VichImageType::class, [
+                'required' => false,
+                'allow_delete' => true,
+                'delete_label' => 'Remove the image',
+                'download_label' => 'Download an image',
+                'download_uri' => true,
+                'image_uri' => true,
+                'asset_helper' => true,
+            ]);
         // ->add('createdAt')
         // ->add('updatedAt')
         // ->add('author');

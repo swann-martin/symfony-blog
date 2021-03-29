@@ -3,10 +3,20 @@
 
 {% block body %}
 	<article class="blog-post card my-5 p-2">
-		<h2 class="blog-post-title">{{post.title}}</h2>
-		<p class="blog-post-title">{{post.createdAt|date('d/m/Y')}}
-			<a href="#">{{post.author}}</a>
-		</p>
-		<p>{{post.content}}</p>
-	</article>
-{% endblock %}
+		<div class="d-flex ">
+			{% if post.image != null %}
+				<img src="{{asset('assets/images/uploads/' ~ post.image)}}" alt="{{post.title}}" style="width:8rem;"/>
+			{% endif 	%}
+			<div class="p-2">
+				<div class="d-flex justify-content-between">
+					<h2 class="blog-post-title">{{post.title}}</h2>
+					<span class="blog-post">{{post.createdAt|date('d/m/Y')}}</span>
+				</div>
+				<a href="#">{{post.author}}</a>
+				<p>{{post.content}}</p>
+			</p>
+		</div>
+	</div>
+
+
+</article>{% endblock %}
