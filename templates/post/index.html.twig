@@ -20,12 +20,22 @@
 					{{post.Author}}
 					a écrit :
 				</h4>
-				<h3 class="title">{{post.title}}</h3>
+				<a href="{{ path("app_post_show", {id:post.id}) }}">
+					<h3 class="title">{{post.title}}</h3>
+				</a>
 				<p class="card-content">{{post.content}}</p>
 
 				<div>
-					<a href="#" class=" btn btn-warning ">Modification</a>
-					<a href="#" class=" btn btn-danger">Suppression</a>
+					{% if app.user and (app.user is same as(post.author)) %}
+						<a href="{{ path('app_post_edit', {id:post.id}) }}" class=" btn btn-warning ">Edit post</a>
+						<form method="POST" action="{{ path('app_post_delete', {id:post.id}) }}">
+							<input type="hidden" name="_method" value="DELETE">
+							<input type="hidden" name="csrf_token" value="{{ csrf_token('post_delete_' ~ post.id) }}">
+							<input type="submit" class=" btn btn-danger my-2" value="Delete post">
+						</form>
+
+					{% endif %}
+
 				</div>
 
 			</div>
@@ -33,5 +43,4 @@
 		{% endfor %}
 
 	</section>
-
 {% endblock %}

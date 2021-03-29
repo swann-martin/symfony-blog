@@ -26,6 +26,11 @@ class PostController extends AbstractController
         // return $this->render('post/index.html.twig', compact('posts'));
 
     }
+
+
+
+
+
     /**
      * @Route("/post/create", name="app_post_create", methods="GET|POST")
      */
@@ -41,9 +46,69 @@ class PostController extends AbstractController
 
             $em->persist($post);
             $em->flush();
+
+            $this->addFlash('success', 'Your post has been created successfully');
+
             return $this->redirectToRoute('app_home');
         }
 
         return $this->render('post/create.html.twig', ['form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/post/edit/{id<\d+>}", name="app_post_edit", methods="GET|POST|PUT")
+     */
+    public function edit(Request $request, Post $post, EntityManagerInterface $em, Security $security)
+    {
+
+        $form = $this->createForm(CreatePostType::class, $post);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $security->getUser();
+
+            if ($user === $post->getAuthor()) {
+                $em->flush();
+                $this->addFlash('success', 'Your post has been edited successfully');
+            } else {
+                $this->addFlash('danger', 'Your post could not be edited. Try again.');
+            }
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('post/edit.html.twig', [
+            'form' => $form->createView(),
+            'post' => $post,
+        ]);
+    }
+
+    /**
+     * @Route("/post/{id<\d+>}", name="app_post_delete", methods="DELETE")
+     */
+    public function delete(Request $request, Post $post, EntityManagerInterface $em, Security $security)
+    {
+        $user = $security->getUser();
+
+        if ($this->isCsrfTokenValid('post_delete_' . $post->getId(), $request->request->get('csrf_token'))) {
+
+            if ($user === $post->getAuthor()) {
+                $em->remove($post);
+                $em->flush();
+                $this->addFlash('warning', 'Your post has been deleted successfully !');
+            }
+        }
+        return $this->redirectToRoute('app_home');
+    }
+
+
+    /**
+     * @Route("/post/{id<\d+>}", name="app_post_show")
+     */
+    public function show(Post $post)
+    {
+        return $this->render('post/show.html.twig', [
+            'post' => $post,
+        ]);
     }
 }

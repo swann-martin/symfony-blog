@@ -9,7 +9,7 @@
 		{# <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous"> #}
 
 		{# Run `composer require symfony/webpack-encore-bundle`
-		           and uncomment the following Encore helpers to start using Symfony UX #}
+																		           and uncomment the following Encore helpers to start using Symfony UX #}
 
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
@@ -20,6 +20,13 @@
 		{% endblock %}
 	</head>
 	<body>
-		{% block body %}{% endblock %}
-	</body>
-</html>
+		<div class="container">
+			{{ include('common/_navbar.html.twig')}}
+			{{ include('common/_flash.html.twig')}}
+
+		</div>
+
+		<main class="container"> {% block body %}{% endblock %}
+			</main>
+		</body>
+	</html>
